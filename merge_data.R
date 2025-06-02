@@ -2,6 +2,9 @@
 # MERGE THE 7 WAVES INTO POOLED CROSS-SECTIONAL DATASET
 # ===============================================================================
 
+# Load required library for data manipulation
+library(dplyr)
+
 cat("\n", paste(rep("=", 80), collapse=""), "\n")
 cat("MERGING 7 WAVES INTO POOLED CROSS-SECTIONAL DATASET\n")
 cat(paste(rep("=", 80), collapse=""), "\n\n")
@@ -45,21 +48,13 @@ cat("Common variables across all datasets:", length(common_vars), "out of", max(
 # Combine all datasets into pooled cross-sectional data
 cat("\nCombining datasets...\n")
 
-# Method 1: Using rbind (if all variables are identical)
-if (length(unique(var_counts)) == 1 && all(sapply(all_vars, function(x) identical(sort(x), sort(all_vars[[1]]))))) {
-  
-  pooled_data <- rbind(data_1997, data_1998, data_1999, data_2000, 
-                       data_2001, data_2002, data_2003)
-  cat("✓ Successfully merged using rbind() - all variables identical\n")
-  
-} else {
-  
-  # Method 2: Using bind_rows (handles different variable sets)
-  pooled_data <- bind_rows(data_1997, data_1998, data_1999, data_2000, 
-                           data_2001, data_2002, data_2003)
-  cat("✓ Successfully merged using bind_rows() - handled variable differences\n")
-  
-}
+# Use bind_rows() which handles labelled data better than rbind()
+# This is more robust for Stata labelled variables with different precisions
+cat("Using bind_rows() to handle Stata labelled variables...\n")
+
+pooled_data <- bind_rows(data_1997, data_1998, data_1999, data_2000, 
+                         data_2001, data_2002, data_2003)
+cat("✓ Successfully merged using bind_rows()\n")
 
 # Display information about the merged dataset
 cat("\n", paste(rep("-", 60), collapse=""), "\n")

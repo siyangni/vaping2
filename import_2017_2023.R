@@ -12,3 +12,4 @@ print("Variable names:")
 print(names(data_2017_2023))
 print("First few rows:")
 print(head(data_2017_2023))
+
